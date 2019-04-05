@@ -15,7 +15,6 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', () => {
     console.log('New WebSocket Connection')
     console.log('HELLO WORLD');
-    
 })
 
 server.listen(port, () => {

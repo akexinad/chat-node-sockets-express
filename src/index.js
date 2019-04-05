@@ -12,9 +12,22 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
 
-io.on('connection', () => {
+let count = 0
+
+// server (emit) -> client (recieve) - countUpdated
+// client (emit) -> server (revieve) - increment
+
+io.on('connection', (socket) => {
     console.log('New WebSocket Connection')
-    console.log('HELLO WORLD');
+
+    socket.emit('countUpdated', count)
+
+    socket.on('increment', () => {
+        count++
+        // socket.emit('countUpdated', count) --> This emits it to only ONE connection (i.e. one browser tab)
+        // The expression below will emit the count updated to ALL the connections
+        io.emit('countUpdated', count)
+    })
 })
 
 server.listen(port, () => {

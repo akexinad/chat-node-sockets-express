@@ -20,13 +20,10 @@ let count = 0
 io.on('connection', (socket) => {
     console.log('New WebSocket Connection')
 
-    socket.emit('countUpdated', count)
+    io.emit('welcomeMessage', 'Hello World!')
 
-    socket.on('increment', () => {
-        count++
-        // socket.emit('countUpdated', count) --> This emits it to only ONE connection (i.e. one browser tab)
-        // The expression below will emit the count updated to ALL the connections
-        io.emit('countUpdated', count)
+    socket.on('sendMessage', (message) => {
+        io.emit('message', message)
     })
 })
 

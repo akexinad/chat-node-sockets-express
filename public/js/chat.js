@@ -35,26 +35,24 @@ $messageForm.addEventListener('submit', (e) => {
 })
 
 $sendLocationButton.addEventListener('click', () => {
-
-    $sendLocationButton.setAttribute('disabled', 'disabled')
-    
     if (!navigator.geolocation) {
-        $sendLocationButton.removeAttribute('disabled')
         return alert('Geolocation is not supported by your browser')
     }
+
+    $sendLocationButton.setAttribute('disabled', 'disabled')
 
     navigator.geolocation.getCurrentPosition( (position) => {
         socket.emit('sendLocation', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
         }, () => {
-            console.log('Location Shared');
             $sendLocationButton.removeAttribute('disabled')
+            console.log('Location Shared');
         })
     },
     (error) => {
-        console.log(error);
         $sendLocationButton.removeAttribute('disabled')
+        console.log(error);
     })
 })
 

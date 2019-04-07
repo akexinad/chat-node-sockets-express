@@ -9,12 +9,21 @@ const $messages = document.querySelector('#messages')
 
 // Templates
 const $messageTemplate = document.querySelector('#message-template').innerHTML
+const $locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
 
 
 socket.on('message', (message) => {
     console.log(message);
     const html = Mustache.render($messageTemplate, {
         message
+    })
+    $messages.insertAdjacentHTML('beforeend', html)
+})
+
+socket.on('locationMessage', (url) => {
+    console.log(url);
+    const html = Mustache.render($locationMessageTemplate, {
+        url
     })
     $messages.insertAdjacentHTML('beforeend', html)
 })
@@ -58,6 +67,13 @@ $sendLocationButton.addEventListener('click', () => {
     (error) => {
         $sendLocationButton.removeAttribute('disabled')
         console.log(error);
+        socket.emit('sendLocation', {
+            latitude: 43.773075,
+            longitude: 11.257014
+        }, () => {
+            $sendLocationButton.removeAttribute('disabled')
+            console.log('Location Shared');
+        })
     })
 })
 

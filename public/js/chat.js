@@ -1,17 +1,22 @@
 const socket = io()
 
-// server (emit) -> client (receive) --acknowledgement --> server
-
-// client (emit) -> server (receive) --acknowledgement --> client
-
 // Elements
 const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
 const $sendLocationButton = document.querySelector('#send-location')
+const $messages = document.querySelector('#messages')
+
+// Templates
+const $messageTemplate = document.querySelector('#message-template').innerHTML
+
 
 socket.on('message', (message) => {
     console.log(message);
+    const html = Mustache.render($messageTemplate, {
+        message
+    })
+    $messages.insertAdjacentHTML('beforeend', html)
 })
 
 $messageForm.addEventListener('submit', (e) => {
@@ -55,6 +60,8 @@ $sendLocationButton.addEventListener('click', () => {
         console.log(error);
     })
 })
+
+// ERROR CODE TO POST ON STACKOVERFLOW
 
 // $sendLocationButton.addEventListener('click', () => {
 //     $sendLocationButton.setAttribute('disabled', 'disabled')

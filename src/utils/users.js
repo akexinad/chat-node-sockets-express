@@ -1,7 +1,5 @@
 const users = []
 
-// addUser, removeUser, getUser, getUsersInRoom
-
 const addUser = ({ id, username, room }) => {
     // Clean the data
     username = username.trim().toLowerCase()
@@ -40,41 +38,33 @@ const removeUser = (id) => {
     }
 }
 
-addUser({
-    id: 22,
-    username: 'Danny',
-    room: "SieNA"
-})
+const getUser = (id) => {
+    const user = users.find( user => user.id === id)
 
-addUser({
-    id: 33,
-    username: 'joe',
-    room: "SieNA"
-})
+    if (!user) {
+        return {
+            error: 'User does not exist!'
+        }
+    }
 
-addUser({
-    id: 44,
-    username: 'james',
-    room: "SieNA"
-})
+    return user
+}
 
-addUser({
-    id: 55,
-    username: 'mike',
-    room: "SieNA"
-})
+getUsersInRoom = (room) => {
+    const usersInRoom = users.filter( user => user.room === room)
 
-console.log(users);
+    if (usersInRoom.length === 0) {
+        return {
+            error: 'Room does not exist'
+        }
+    }
 
-const removedUser = removeUser(44);
+    return usersInRoom
+}
 
-console.log(removedUser);
-console.log(users);
-
-
-// module.exports = {
-//     addUser,
-//     removeUser,
-//     getUser,
-//     getUsersInRoom
-// }
+module.exports = {
+    addUser,
+    removeUser,
+    getUser,
+    getUsersInRoom
+}

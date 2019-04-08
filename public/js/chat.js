@@ -8,23 +8,24 @@ const $sendLocationButton = document.querySelector('#send-location')
 const $messages = document.querySelector('#messages')
 
 // Templates
-const $messageTemplate = document.querySelector('#message-template').innerHTML
-const $locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
+const messageTemplate = document.querySelector('#message-template').innerHTML
+const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
 
 
 socket.on('message', (message) => {
     console.log(message);
-    const html = Mustache.render($messageTemplate, {
+    const html = Mustache.render(messageTemplate, {
         message: message.text,
-        createdAt: moment(message.createdAt).format('h:mm:ss a')
+        createdAt: moment(message.createdAt).format('k:mm:ss')
     })
     $messages.insertAdjacentHTML('beforeend', html)
 })
 
-socket.on('locationMessage', (url) => {
-    console.log(url);
-    const html = Mustache.render($locationMessageTemplate, {
-        url
+socket.on('locationMessage', (location) => {
+    console.log(location);
+    const html = Mustache.render(locationMessageTemplate, {
+        location: location.url,
+        createdAt: moment(location.createdAt).format('k:mm:ss')
     })
     $messages.insertAdjacentHTML('beforeend', html)
 })

@@ -14,6 +14,28 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const autoScroll = () => {
+    // New message element
+    const $newMessage = $messages.lastElementChild
+
+    // Height of the new message
+    const newMessageStyles = getComputedStyle($newMessage)
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+
+    // Visible Height
+    const visibleHeight = $messages.offsetHeight
+
+    // Height of messages container
+    const containerHeight = $messages.scrollHeight
+
+    // How fare have I scrolled. Distance from the top of the scroll bar.
+    const scrollOffset = $messages.scrollTop + visibleHeight
+
+    if (containerHeight - newMessageHeight <= scrollOffset) {
+        $messages.scrollTop = $messages.scrollHeight
+    }
+}
 
 socket.on('message', (message) => {
     console.log(message);
@@ -23,6 +45,7 @@ socket.on('message', (message) => {
         createdAt: moment(message.createdAt).format('k:mm:ss')
     })
     $messages.insertAdjacentHTML('beforeend', html)
+    autoScroll()
 })
 
 socket.on('locationMessage', (location) => {
@@ -33,6 +56,7 @@ socket.on('locationMessage', (location) => {
         createdAt: moment(location.createdAt).format('k:mm:ss')
     })
     $messages.insertAdjacentHTML('beforeend', html)
+    autoScroll()
 })
 
 socket.on('roomData', ({ room, users }) => {
@@ -98,24 +122,3 @@ socket.emit('join', { username, room }, (error) => {
         location.href = '/'
     }
 })
-
-// ERROR CODE TO POST ON STACKOVERFLOW
-
-// $sendLocationButton.addEventListener('click', () => {
-//     $sendLocationButton.setAttribute('disabled', 'disabled')
-
-//     if (!navigator.geolocation) {
-//         $sendLocationButton.removeAttribute('disabled')
-//         return alert('Geolocation is not supported by your browser')
-//     }
- 
-//     navigator.geolocation.getCurrentPosition(
-//         position => {
-//             console.log(position);
-//             $sendLocationButton.removeAttribute('disabled')
-//         },
-//         error => {
-//             console.log(error);
-//             $sendLocationButton.removeAttribute('disabled')
-//         })
-// })
